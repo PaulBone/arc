@@ -20,7 +20,7 @@
 function myArc(ctx, cx, cy, r, start, end) {
     function dot(x, y, c) {
         ctx.fillStyle = c;
-        // we're using 2x2 squares for dots.
+        // we're using 4x4 squares for dots.
         ctx.fillRect(cx + x, cx - y, 4, 4);
     }
 
