@@ -27,6 +27,9 @@ function myArc(ctx, cx, cy, r, start, end) {
     // A dot in the center,
     dot(0, 0, "white");
 
+    // The distance along x or y of the 45 degree point.
+    const rtan = Math.sqrt(r*r/2);
+
     // Calculate which quadrents are active.
     // Start and end are ssumed to be between 0 and 2pi
     let startq = Math.floor(start / (Math.PI / 4));
@@ -78,11 +81,6 @@ function myArc(ctx, cx, cy, r, start, end) {
             case MID:
                 dot( x,  y, "green");
                 break;
-            case STARTEND:
-                if (x >= sx && x < ex) {
-                    dot( x,  y, "pink");
-                }
-                break;
             case START:
                 if (x >= sx) {
                     dot( x,  y, "red");
@@ -93,9 +91,34 @@ function myArc(ctx, cx, cy, r, start, end) {
                     dot( x,  y, "blue");
                 }
                 break;
+            case STARTEND:
+                if (x >= sx && x < ex) {
+                    dot( x,  y, "pink");
+                }
+                break;
         }
 
-        if (q[1] == MID) dot( y,  x, "green");
+        switch (q[1]) {
+            case MID:
+                dot( y,  x, "green");
+                break;
+            case START:
+                if (x < (rtan - sx)) {
+                    dot( y,  x, "red");
+                }
+                break;
+            case END:
+                if (x >= (rtan - ex)) {
+                    dot( y,  x, "blue");
+                }
+                break;
+            case STARTEND:
+                if (x < (rtan - sx) && x >= (rtan - ex)) {
+                    dot( y,  x, "pink");
+                }
+                break;
+        }
+
         if (q[2] == MID) dot( y, -x, "green");
         if (q[3] == MID) dot( x, -y, "green");
         if (q[3] == END && x > ex) {
