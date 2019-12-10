@@ -12,7 +12,14 @@
   <input type="text" id="e" value="165"/><br/>
   
   <button onClick="doDrawArc();">Draw</button>
-  <button onClick="doClear();">Clear</button>
+  <button onClick="doClear();">Clear</button><br/>
+
+  <label>Test parameters (str, sep, inc):</label>
+  <input type="text" id="str" value="0"/>
+  <input type="text" id="sep" value="10"/>
+  <input type="text" id="inc" value="5"/><br/>
+
+  <button onClick="doTest();">Test</button>
 
 </div>
 
@@ -159,9 +166,21 @@ function doDrawArc() {
     let e = Number(document.getElementById("e").value);
     myArc(context, x, y, r, s * Math.PI / 180, e * Math.PI / 180);
 }
-
 function doClear() {
   context.clearRect(0, 0, canvas.width, canvas.height);
 }
-
+function doTest() {
+    doClear();
+    let x =   Number(document.getElementById("x").value);
+    let y =   Number(document.getElementById("x").value);
+    let r =   Number(document.getElementById("r").value);
+    let str_elem = document.getElementById("str");
+    let str = Number(str_elem.value);
+    let sep = Number(document.getElementById("sep").value);
+    let end = (str + sep) % 360;
+    let inc = Number(document.getElementById("inc").value);
+    console.log(`str_elem = ${str_elem}, str_elem.value = ${str_elem.value}`);
+    myArc(context, x, y, r, str * Math.PI / 180, end * Math.PI / 180);
+    str_elem.value = (str + inc) % 360;
+}
 </script>
