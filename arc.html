@@ -32,17 +32,37 @@ function myArc(ctx, cx, cy, r, start, end) {
     let endq = Math.floor(end / (Math.PI / 4));
     let q = [];
     console.log(`startq: ${startq}, endq: ${endq}`);
-    if (start < end) {
-        // The arc does not go through 0.
-        for (let i = 0; i < 8; i++) {
-            q[i] = startq < i && endq > i;
-        }
-    } else {
-        // The arc goes through 0.
-        for (let i = 0; i < 8; i++) {
-            q[i] = startq < i || endq > i;
+
+    const NONE=0;
+    const MID=1;
+    const START=2;
+    const END=3;
+    const STARTEND=4;
+
+    for (let i = 0; i < 8; i++) {
+        if (startq == i && endq == i) {
+            q[i] = STARTEND;
+        } else if (startq == i) {
+            q[i] = START;
+        } else if (endq == i) {
+            q[i] = END;
+        } else if (start < end) {
+            // The arc does not go through 0.
+            if (startq < i && endq > i) {
+                q[i] = MID;
+            } else {
+                q[i] = NONE;
+            }
+        } else {
+            // The arc goes through 0.
+            if (startq < i || endq > i) {
+                q[i] = MID;
+            } else {
+                q[i] = NONE;
+            }
         }
     }
+
     console.log(`quadrents ${q}`);
 
     // The normalised (to within a quadrent) x values of where the arc
@@ -53,42 +73,46 @@ function myArc(ctx, cx, cy, r, start, end) {
 
     function circDot(q, x, y) {
         // Quadrent 0.
-        if (q[0]) {
-            dot( x,  y);
-        }
-        else if (startq == 0 && endq == 0) {
-            if (x >= sx && x < ex) {
-                ctx.fillStyle = "pink";
+        switch (q[0]) {
+            case MID:
                 dot( x,  y);
-                ctx.fillStyle = "green";
-            }
-        } else if (startq == 0) {
-            if (x >= sx) {
-              ctx.fillStyle = "red";
-              dot( x,  y);
-              ctx.fillStyle = "green";
-            }
-        } else if (endq == 0) {
-            if (x < ex) {
-                ctx.fillStyle = "blue";
-                dot( x,  y);
-                ctx.fillStyle = "green";
-            }
+                break;
+            case STARTEND:
+                if (x >= sx && x < ex) {
+                    ctx.fillStyle = "pink";
+                    dot( x,  y);
+                    ctx.fillStyle = "green";
+                }
+                break;
+            case START:
+                if (x >= sx) {
+                    ctx.fillStyle = "red";
+                    dot( x,  y);
+                    ctx.fillStyle = "green";
+                }
+                break;
+            case END:
+                if (x < ex) {
+                    ctx.fillStyle = "blue";
+                    dot( x,  y);
+                    ctx.fillStyle = "green";
+                }
+                break;
         }
 
-        if (q[1]) dot( y,  x);
-        if (q[2]) dot( y, -x);
-        if (q[3]) dot( x, -y);
-        if (endq == 3 && x > ex) {
+        if (q[1] == MID) dot( y,  x);
+        if (q[2] == MID) dot( y, -x);
+        if (q[3] == MID) dot( x, -y);
+        if (q[3] == END && x > ex) {
             ctx.fillStyle = "blue";
             dot( x, -y);
             ctx.fillStyle = "green";
         }
 
-        if (q[4]) dot(-x, -y);
-        if (q[5]) dot(-y, -x);
-        if (q[6]) dot(-y,  x);
-        if (q[7]) dot(-x,  y);
+        if (q[4] == MID) dot(-x, -y);
+        if (q[5] == MID) dot(-y, -x);
+        if (q[6] == MID) dot(-y,  x);
+        if (q[7] == MID) dot(-x,  y);
     }
 
     let x = 0;
