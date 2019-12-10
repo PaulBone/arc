@@ -18,13 +18,14 @@
 
 <script>
 function myArc(ctx, cx, cy, r, start, end) {
-    function dot(x, y) {
+    function dot(x, y, c) {
+        ctx.fillStyle = c;
         // we're using 2x2 squares for dots.
         ctx.fillRect(cx + x, cx - y, 4, 4);
     }
 
     // A dot in the center,
-    dot(0, 0);
+    dot(0, 0, "white");
 
     // Calculate which quadrents are active.
     // Start and end are ssumed to be between 0 and 2pi
@@ -75,44 +76,36 @@ function myArc(ctx, cx, cy, r, start, end) {
         // Quadrent 0.
         switch (q[0]) {
             case MID:
-                dot( x,  y);
+                dot( x,  y, "green");
                 break;
             case STARTEND:
                 if (x >= sx && x < ex) {
-                    ctx.fillStyle = "pink";
-                    dot( x,  y);
-                    ctx.fillStyle = "green";
+                    dot( x,  y, "pink");
                 }
                 break;
             case START:
                 if (x >= sx) {
-                    ctx.fillStyle = "red";
-                    dot( x,  y);
-                    ctx.fillStyle = "green";
+                    dot( x,  y, "red");
                 }
                 break;
             case END:
                 if (x < ex) {
-                    ctx.fillStyle = "blue";
-                    dot( x,  y);
-                    ctx.fillStyle = "green";
+                    dot( x,  y, "blue");
                 }
                 break;
         }
 
-        if (q[1] == MID) dot( y,  x);
-        if (q[2] == MID) dot( y, -x);
-        if (q[3] == MID) dot( x, -y);
+        if (q[1] == MID) dot( y,  x, "green");
+        if (q[2] == MID) dot( y, -x, "green");
+        if (q[3] == MID) dot( x, -y, "green");
         if (q[3] == END && x > ex) {
-            ctx.fillStyle = "blue";
-            dot( x, -y);
-            ctx.fillStyle = "green";
+            dot( x, -y, "blue");
         }
 
-        if (q[4] == MID) dot(-x, -y);
-        if (q[5] == MID) dot(-y, -x);
-        if (q[6] == MID) dot(-y,  x);
-        if (q[7] == MID) dot(-x,  y);
+        if (q[4] == MID) dot(-x, -y, "green");
+        if (q[5] == MID) dot(-y, -x, "green");
+        if (q[6] == MID) dot(-y,  x, "green");
+        if (q[7] == MID) dot(-x,  y, "green");
     }
 
     let x = 0;
